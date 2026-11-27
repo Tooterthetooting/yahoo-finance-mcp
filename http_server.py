@@ -16,7 +16,12 @@ import os
 import uvicorn
 from starlette.responses import PlainTextResponse
 
+import valuation_tools
 from server import yfinance_server
+
+# Adds get_valuation_snapshot and makes get_stock_info fall back to it when
+# Yahoo throttles the full info request (common on cloud hosts like Render).
+valuation_tools.register()
 
 port = int(os.environ.get("PORT", "8000"))
 secret = os.environ.get("SECRET_PATH", "").strip("/")
