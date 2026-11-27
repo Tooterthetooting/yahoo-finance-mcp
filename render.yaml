@@ -1,0 +1,12 @@
+# Render Blueprint: tells Render how to build and run the Yahoo Finance MCP server.
+services:
+  - type: web
+    name: yahoo-finance-mcp
+    runtime: docker
+    plan: free            # change to "starter" ($7/month) for always-on
+    dockerfilePath: ./Dockerfile.http
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: SECRET_PATH
+        sync: false       # Render asks you to paste this value when you create the Blueprint

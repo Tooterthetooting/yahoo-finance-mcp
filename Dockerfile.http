@@ -1,0 +1,18 @@
+# Dockerfile for hosting the Yahoo Finance MCP server online (HTTP mode).
+FROM python:3.14-slim
+
+WORKDIR /app
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+# Install the exact dependency versions pinned in uv.lock
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+COPY . .
+
+ENV PYTHONUNBUFFERED=1 \
+    PATH="/app/.venv/bin:$PATH"
+
+# Most hosts set PORT for you; 8000 is the fallback.
+EXPOSE 8000
+CMD ["python", "http_server.py"]
